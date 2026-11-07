@@ -86,6 +86,10 @@ C4Container
 
 - **Module wiring / registration:** адаптер викликає `registerSource()` під час
   імпорту (`lib/claude/index.js:14`); імпорт у `server.js:4` обов'язковий.
+  `registerSource()` перевіряє лише істинність значень `id`, `label`, `home`
+  (`lib/sources.js:13`), без перевірки типів і того, чи `home` є функцією.
+  Повторна реєстрація з тим самим ключем `id` замінює попередній адаптер
+  через `Map.set()` (`lib/sources.js:16`).
   Реєстр повертає назовні список `{id, label}` (`lib/sources.js:26`).
 - **Error handling:** звичайний `Error` без власних класів і кодів, наприклад
   невалідне джерело (`lib/sources.js:14`) або невідома іконка (`views/layout.js:41`).
@@ -101,6 +105,13 @@ C4Container
 - **Tests:** `node:test` + `node:assert/strict`, HTTP-перевірки з cleanup
   (`test/skeleton.test.js:1`). Harness задає `CLAUDE_HOME` до імпорту сервера
   й слухає `127.0.0.1` на вільному порту (`test/helpers.js:8`).
+  Перший тест перевіряє `ok === true`, рівність `claudeHome` шляху фікстур і
+  наявність джерела з `id === 'claude'` (`test/skeleton.test.js:8`). Другий —
+  `<title>agent-ops</title>` та згадку `Content-Security-Policy` у HTML
+  (`test/skeleton.test.js:15`). Третій порівнює позиції рядків підключення
+  `/theme.js` і stylesheet, перевіряє наявність `data-theme-toggle` та HTTP 200
+  для `/theme.js` (`test/skeleton.test.js:21`). Виконання перемикання теми в
+  браузері, точні директиви CSP й текст заглушки ці тести не перевіряють.
 - **Inter-module communication:** прямі ESM-імпорти й виклики функцій
   (`server.js:4`); подій, черг і внутрішніх HTTP-сервісів немає.
 - **JavaScript:** named exports, модулі `node:`, функції та стан у замиканні;
@@ -179,7 +190,8 @@ C4Container
 
 - Нове джерело: приклад самореєстрації — `lib/claude/index.js:14`, реєстр —
   `lib/sources.js:12`, обов'язкове підключення — `server.js:4`. Поточний контракт
-  перевіряє лише `id`, `label`, `home`; reader API ще не реалізовано.
+  перевіряє лише істинність значень `id`, `label`, `home`, без перевірки типів;
+  reader API ще не реалізовано.
 - Новий HTTP JSON endpoint: зразок готового `/api/health` у `server.js:13`.
   Він повертає `ok`, проєкцію зареєстрованих джерел і шлях `claudeHome`.
 - Нова HTML-сторінка: `server.js:17` показує послідовність body → `layout()` →
