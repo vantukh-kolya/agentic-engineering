@@ -1,0 +1,181 @@
+{
+  "slug": "session-index",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Збирати метадані основних сесій налаштованого джерела",
+      "layer": "infra",
+      "deps": [],
+      "acs": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-06",
+        "AC-07",
+        "AC-11",
+        "AC-12",
+        "AC-13"
+      ],
+      "dod": "Тести test/session-metadata.test.js підтверджують точний склад, метадані, порожнечу, ізоляцію та виключення посилань; npm run verify проходить.",
+      "files_hint": [
+        "lib/claude/sessions.js",
+        "test/session-metadata.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/read-session-metadata.md",
+      "status": "todo"
+    },
+    {
+      "id": "T2",
+      "title": "Зберігати доступні рядки та розрізняти файлові збої",
+      "layer": "infra",
+      "deps": [
+        "T1"
+      ],
+      "acs": [
+        "AC-08",
+        "AC-09",
+        "AC-10"
+      ],
+      "dod": "Тести test/session-read-errors.test.js перевіряють AC-08–AC-10 для всіх рівнів збоїв, збереження рядків та лічильники; npm run verify проходить.",
+      "files_hint": [
+        "lib/claude/sessions.js",
+        "test/session-read-errors.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/preserve-partial-results.md",
+      "status": "todo"
+    },
+    {
+      "id": "T3",
+      "title": "Відхиляти помилковий limit перед обробкою індексу",
+      "layer": "ports",
+      "deps": [],
+      "acs": [
+        "AC-04",
+        "AC-05"
+      ],
+      "dod": "HTTP-тести test/session-limit.test.js перевіряють точну граматику, дублікати та відповідь 400 без переліку; npm run verify проходить.",
+      "files_hint": [
+        "server.js",
+        "test/session-limit.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/validate-query-limit.md",
+      "status": "todo"
+    },
+    {
+      "id": "T4",
+      "title": "Показувати повні метадані та підсумки обмеженого переліку",
+      "layer": "ui",
+      "deps": [],
+      "acs": [
+        "AC-01",
+        "AC-03",
+        "AC-04",
+        "AC-14"
+      ],
+      "dod": "Тести test/session-view.test.js підтверджують поля, UTC, похідний підпис, підсумки, безпечний HTML і керування limit; npm run verify проходить.",
+      "files_hint": [
+        "views/sessions.js",
+        "test/session-view.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/render-session-table.md",
+      "status": "todo"
+    },
+    {
+      "id": "T5",
+      "title": "Розрізняти порожній, неповний і помилкові стани сторінки",
+      "layer": "ui",
+      "deps": [
+        "T4"
+      ],
+      "acs": [
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08",
+        "AC-09",
+        "AC-10"
+      ],
+      "dod": "Тести test/session-view-states.test.js перевіряють усі стани, точні повідомлення й підсумки AC-05–AC-10; npm run verify проходить.",
+      "files_hint": [
+        "views/sessions.js",
+        "test/session-view-states.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/render-session-states.md",
+      "status": "todo"
+    },
+    {
+      "id": "T6",
+      "title": "Підключити індекс на головній зі спільним сортуванням і лімітом",
+      "layer": "wiring",
+      "deps": [
+        "T2",
+        "T3",
+        "T5"
+      ],
+      "acs": [
+        "AC-01",
+        "AC-04",
+        "AC-05",
+        "AC-08",
+        "AC-09",
+        "AC-10",
+        "AC-11",
+        "AC-15"
+      ],
+      "dod": "HTTP-тести test/session-index.test.js підтверджують сортування перед лімітом, 1/50/1000, 200/400/503, ранню валідацію, ізоляцію та незмінний health; npm run verify проходить.",
+      "files_hint": [
+        "lib/claude/index.js",
+        "server.js",
+        "test/session-index.test.js"
+      ],
+      "file": "docs/features/session-index/tasks/wire-session-index.md",
+      "status": "todo"
+    },
+    {
+      "id": "T7",
+      "title": "Підтвердити приватність, недоторканність джерела й безпеку HTML",
+      "layer": "tests",
+      "deps": [
+        "T6"
+      ],
+      "acs": [
+        "AC-02",
+        "AC-11",
+        "AC-12",
+        "AC-13",
+        "AC-14",
+        "AC-15"
+      ],
+      "dod": "Тести test/session-security.test.js підтверджують 0 відкриттів JSONL, 0 записів, ізоляцію, escaping і незмінну CSP; security-check.md містить фактичні результати, npm run verify проходить.",
+      "files_hint": [
+        "test/session-security.test.js",
+        "docs/features/session-index/security-check.md"
+      ],
+      "file": "docs/features/session-index/tasks/verify-index-privacy.md",
+      "status": "todo"
+    },
+    {
+      "id": "T8",
+      "title": "Забезпечити читання повних значень у двох темах і на двох ширинах",
+      "layer": "ui",
+      "deps": [
+        "T6"
+      ],
+      "acs": [
+        "AC-01",
+        "AC-03",
+        "AC-14",
+        "AC-15"
+      ],
+      "dod": "Тести test/session-readable.test.js і npm run verify проходять; ui-check.md фіксує браузерну перевірку 320/1280 px у двох темах, повних значень і збереження теми.",
+      "files_hint": [
+        "views/sessions.js",
+        "public/style.css",
+        "test/session-readable.test.js",
+        "docs/features/session-index/ui-check.md"
+      ],
+      "file": "docs/features/session-index/tasks/verify-responsive-shell.md",
+      "status": "todo"
+    }
+  ]
+}
