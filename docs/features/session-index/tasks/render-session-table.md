@@ -9,8 +9,8 @@ files_hint: ["views/sessions.js", "test/session-view.test.js"]
 owner: "maintainer"
 estimate: "4h"
 context_budget: "M"  # 77 non-empty lines; усі потрібні витяги включено; до 4 додаткових файлів коду/правил на старті.
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T4 — Показувати повні метадані та підсумки обмеженого переліку
@@ -151,11 +151,11 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] У `test/session-view.test.js` додати RED-перевірки HTML за готовою моделлю: чотири поля, повний ID, точні байти й ISO 8601 UTC, projectKey та «похідний».
-- [ ] У `views/sessions.js` створити named export чистої функції HTML. Узгодити модель: готові sessions, limit, visibleCount, availableCount, totalCount і state/counters із SAD §5; не імпортувати lib/* чи node:fs.
-- [ ] У `views/sessions.js` перевикористати Data table (.table-wrap, .num, .id, data-label), Project cell, Page heading/summary, Toolbar/Segmented links та esc() з views/layout.js. Використати наявні CSS-токени; NEW-примітиви не потрібні.
-- [ ] У `views/sessions.js` показувати видиму й доступну/загальну кількість згідно з моделлю, пояснювати обрізання. Посилання чи GET-контрол керують ?limit=; не генерувати «All N» зі значенням понад 1000.
-- [ ] У `test/session-view.test.js` перевірити escaping тексту й подвійно цитованих атрибутів для ID/projectKey/projectPath; у T8 завершити читабельність довгих значень.
+- [x] У `test/session-view.test.js` додати RED-перевірки HTML за готовою моделлю: чотири поля, повний ID, точні байти й ISO 8601 UTC, projectKey та «похідний».
+- [x] У `views/sessions.js` створити named export чистої функції HTML. Узгодити модель: готові sessions, limit, visibleCount, availableCount, totalCount і state/counters із SAD §5; не імпортувати lib/* чи node:fs.
+- [x] У `views/sessions.js` перевикористати Data table (.table-wrap, .num, .id, data-label), Project cell, Page heading/summary, Toolbar/Segmented links та esc() з views/layout.js. Використати наявні CSS-токени; NEW-примітиви не потрібні.
+- [x] У `views/sessions.js` показувати видиму й доступну/загальну кількість згідно з моделлю, пояснювати обрізання. Посилання чи GET-контрол керують ?limit=; не генерувати «All N» зі значенням понад 1000.
+- [x] У `test/session-view.test.js` перевірити escaping тексту й подвійно цитованих атрибутів для ID/projectKey/projectPath; у T8 завершити читабельність довгих значень.
 
 ## Edge cases
 
@@ -170,7 +170,12 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Тести test/session-view.test.js підтверджують поля, UTC, похідний підпис, підсумки, безпечний HTML і керування limit; npm run verify проходить.
-- [ ] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
-- [ ] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
-- [ ] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+- [x] Тести test/session-view.test.js підтверджують поля, UTC, похідний підпис, підсумки, безпечний HTML і керування limit; npm run verify проходить.
+- [x] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
+- [x] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
+- [x] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+
+## Execution record — 2026-11-11
+
+- **TDD:** GOOD red: 5/5 тестів падали через відсутню sessionsView (undefined замість function). GREEN: таблиця показує всі чотири поля, UTC, початкову теку й похідний шлях; escaping, підсумки, ліміт і незмінність порядку перевірені. Перевикористано наявні компоненти канону без NEW-примітивів.
+- **GATE:** `npm run verify` — exit 0, 31/31, 0 skipped; разом із `preverify`. Node `v26.13.0`, macOS; HTTP-тести запущено поза пісочницею. Окрема integration-команда не запускалась (`require_integration: never`); файлові й HTTP-тести входять у verify. Lint/vet — N/A, команд немає.

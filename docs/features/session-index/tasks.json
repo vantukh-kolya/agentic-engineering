@@ -78,7 +78,7 @@
         "test/session-view.test.js"
       ],
       "file": "docs/features/session-index/tasks/render-session-table.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T5",
