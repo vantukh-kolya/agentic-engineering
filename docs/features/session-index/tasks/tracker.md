@@ -4,7 +4,7 @@
 Кроки: `SELECT` · `RED` · `GREEN` · `REFACTOR` · `GATE` · `REVIEW` · `COMMIT`; до старту `—`.
 `implement` оновлює Status/Step у файлах задач, цю таблицю та status у tasks.json.
 
-**Навчальний маршрут:** maintainer погодив [DEC-training-route](../spec.md#decision-and-edits-log) 2026-11-11: окремі `ux-flows`, `sequences`, `api`, `screens` пропущено; контракт і стани залишаються в SAD та задачах. Один агент виконує задачі послідовно з паузою після T1. Цей запис не змінює статусів і не означає початку реалізації.
+**Навчальний маршрут:** maintainer погодив [DEC-training-route](../spec.md#decision-and-edits-log) 2026-11-11: окремі `ux-flows`, `sequences`, `api`, `screens` пропущено; контракт і стани залишаються в SAD та задачах. Один агент виконав задачі послідовно; паузу після T1 витримано, після повторного виклику implement користувачем виконано T2–T8.
 
 **OQ-01 — контроль до приймання:** за рішенням maintainer від 2026-11-11 вимірювання виконуються після T6 на реалізованому індексі; до приймання maintainer погоджує затримку й обсяг (spec §8, SAD §11). OQ-01 залишається відкритим, але старт задач не блокує. `todo` означає, що виконання не починалось.
 
@@ -53,3 +53,12 @@ T1 завершено через RED → GREEN → REFACTOR → GATE. `npm run v
 **T7:** Перший прогін 6/6 security-тестів зелений: T1–T6 вже забезпечують поведінку. За явним винятком checklist T7 і карти виконання §2 production-код не змінено. Додано контроль спроб, snapshot, escaping, CSP, ізоляції та лінків; справжній DOM Chrome: усі текстові порівняння true, 0 контрольних елементів, handler undefined. Деталі й маніфест у security-check.md; після T8 буде повтор зачеплених сценаріїв. `npm run verify`: exit 0, 52/52, 0 skipped.
 
 **T8:** GOOD red у браузері: на запитаних 320 px layout 471 px, шлях client 254 / scroll 1147, overflow hidden. HTML-перевірка повних значень одразу зелена, дефект у CSS. GREEN: локальне перенесення таблиці й home; фінальна матриця 320/1280 light/dark пройшла, обидві теми збережено після reload, limit і всі стани перевірено в Chrome, безпеку T7 повторено. Деталі й SHA-256 у ui-check.md. `npm run verify`: exit 0, 53/53, 0 skipped.
+
+## Final handoff — 2026-11-11
+
+Усі T1–T8 — `done` / `COMMIT`, blocked/dropped немає. Поточна гілка `feature/session-index`; roadmap лишається `building` до незалежного рев'ю та ship. Зіставлення AC-01–AC-15 містять task-трейлери, тести й звіти; повне приймання не заявляється.
+
+- Фінальний gate: `npm run verify` — exit 0, **53/53**, 0 skipped. Lint/vet — N/A; окремий integration-runner вимкнений, файлові/HTTP-перевірки входять у verify.
+- Браузер: [ui-check.md](../ui-check.md), [security-check.md](../security-check.md). 320/1280 CSS px, light/dark, тема після reload, limit, повний/обрізаний/порожній/partial/unavailable/invalid-limit стани й DOM-інертність перевірені на власній синтетичній копії.
+- OQ-01: [performance-check.md](../performance-check.md) — вимірювання після T6 виконано; поріг і обсяг очікують рішення maintainer, питання лишається відкритим.
+- Наступна дія: незалежне `/sdd:review session-index`, після нього `/sdd:ship session-index`. Ні review, ні ship цей прохід не виконував.
