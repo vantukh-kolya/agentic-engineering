@@ -14,7 +14,24 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true, sources: listSources(), claudeHome: claudeHome() });
 });
 
+function queryLimit(originalUrl) {
+  const values = new URL(originalUrl, 'http://127.0.0.1').searchParams.getAll('limit');
+  if (!values.length) return 50;
+  if (values.length !== 1 || !values[0] || /[^0-9]/.test(values[0])) return null;
+  const limit = Number(values[0]);
+  return limit >= 1 && limit <= 1000 ? limit : null;
+}
+
 app.get('/', (req, res) => {
+  const limit = queryLimit(req.originalUrl);
+  if (limit === null) {
+    return res.status(400).type('html').send(layout({
+      title: 'agent-ops',
+      body: `<h1>Сесії</h1>${empty('Ліміт має бути цілим числом від 1 до 1000')}`,
+      source: 'Claude Code',
+      home: claudeHome(),
+    }));
+  }
   res.type('html').send(layout({
     title: 'agent-ops',
     body: `<h1>agent-ops</h1>

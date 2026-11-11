@@ -59,7 +59,7 @@
         "test/session-limit.test.js"
       ],
       "file": "docs/features/session-index/tasks/validate-query-limit.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T4",
