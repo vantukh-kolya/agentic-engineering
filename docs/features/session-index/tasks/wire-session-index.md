@@ -9,8 +9,8 @@ files_hint: ["lib/claude/index.js", "server.js", "test/session-index.test.js"]
 owner: "maintainer"
 estimate: "5h"
 context_budget: "M"  # 90 non-empty lines; усі потрібні витяги включено; до 4 додаткових файлів коду/правил на старті.
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T6 — Підключити індекс на головній зі спільним сортуванням і лімітом
@@ -183,12 +183,12 @@ No DB changes.
 
 ## Checklist
 
-- [ ] У `test/session-index.test.js` додати RED інтеграційні сценарії через test/helpers.js/startServer(): 6 основних сесій, точні метадані, джерело й health; не послаблювати три тести skeleton.
-- [ ] У `lib/claude/index.js` зареєструвати listSessions() разом із id/label/home; отримувати актуальний projectsDir() на виклик без fallback. У `server.js` зберегти імпорт адаптера й отримати його через getSource('claude').
-- [ ] У `server.js` виконати валідацію до listSessions(), відсортувати всі доступні рядки за спаданням mtimeMs, далі projectKey/id за кодовими одиницями; лише потім slice(limit). Без localeCompare чи ліміту в читачі.
-- [ ] У `server.js` сформувати visibleCount/availableCount/totalCount за SAD §5 й передати модель views/sessions.js; повертати 200/400/503 за станом. Оболонка отримує source.label і home через екрановані параметри layout().
-- [ ] У `test/session-index.test.js` створювати ізольовані синтетичні дерева на >50 і >1000 сесій зі змішаним регістром та однаковими датами; незалежно перевірити весь порядок, префікси 1/50/1000 і повторні запити.
-- [ ] У `test/session-index.test.js` перевірити HTTP-коди та HTML керованих збоїв AC-08–AC-10, відсутність виклику читача за 400, відсутність fallback за порожнього/недоступного CLAUDE_HOME; відновити оточення й підміни після тестів.
+- [x] У `test/session-index.test.js` додати RED інтеграційні сценарії через test/helpers.js/startServer(): 6 основних сесій, точні метадані, джерело й health; не послаблювати три тести skeleton.
+- [x] У `lib/claude/index.js` зареєструвати listSessions() разом із id/label/home; отримувати актуальний projectsDir() на виклик без fallback. У `server.js` зберегти імпорт адаптера й отримати його через getSource('claude').
+- [x] У `server.js` виконати валідацію до listSessions(), відсортувати всі доступні рядки за спаданням mtimeMs, далі projectKey/id за кодовими одиницями; лише потім slice(limit). Без localeCompare чи ліміту в читачі.
+- [x] У `server.js` сформувати visibleCount/availableCount/totalCount за SAD §5 й передати модель views/sessions.js; повертати 200/400/503 за станом. Оболонка отримує source.label і home через екрановані параметри layout().
+- [x] У `test/session-index.test.js` створювати ізольовані синтетичні дерева на >50 і >1000 сесій зі змішаним регістром та однаковими датами; незалежно перевірити весь порядок, префікси 1/50/1000 і повторні запити.
+- [x] У `test/session-index.test.js` перевірити HTTP-коди та HTML керованих збоїв AC-08–AC-10, відсутність виклику читача за 400, відсутність fallback за порожнього/недоступного CLAUDE_HOME; відновити оточення й підміни після тестів.
 
 ## Edge cases
 
@@ -204,7 +204,12 @@ No DB changes.
 
 ## Definition of Done
 
-- [ ] HTTP-тести test/session-index.test.js підтверджують сортування перед лімітом, 1/50/1000, 200/400/503, ранню валідацію, ізоляцію та незмінний health; npm run verify проходить.
-- [ ] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
-- [ ] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
-- [ ] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+- [x] HTTP-тести test/session-index.test.js підтверджують сортування перед лімітом, 1/50/1000, 200/400/503, ранню валідацію, ізоляцію та незмінний health; npm run verify проходить.
+- [x] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
+- [x] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
+- [x] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+
+## Execution record — 2026-11-11
+
+- **TDD:** GOOD red: 9/10 нових HTTP-тестів падали, перший — 0 рядків замість 6. GREEN: реєстр підключає читач, маршрут глобально сортує перед slice, зберігає health і повертає 200/400/503; ліміти 1/50/1000 перевірено на 1005 сесіях. Перший GATE: 45/46 через колізії імен лише за регістром на macOS; фікстуру виправлено без зміни очікуваного правила, повторний GATE 46/46.
+- **GATE:** `npm run verify` — exit 0, 46/46, 0 skipped; разом із `preverify`. Node `v26.13.0`, macOS; HTTP-тести запущено поза пісочницею. Окрема integration-команда не запускалась (`require_integration: never`); файлові й HTTP-тести входять у verify. Lint/vet — N/A, команд немає.

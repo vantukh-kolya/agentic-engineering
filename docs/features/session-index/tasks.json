@@ -129,7 +129,7 @@
         "test/session-index.test.js"
       ],
       "file": "docs/features/session-index/tasks/wire-session-index.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T7",

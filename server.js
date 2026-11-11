@@ -2,8 +2,9 @@ import express from 'express';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { claudeHome } from './lib/claude/index.js';
-import { listSources } from './lib/sources.js';
-import { layout, empty } from './views/layout.js';
+import { getSource, listSources } from './lib/sources.js';
+import { layout } from './views/layout.js';
+import { sessionsView } from './views/sessions.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const app = express();
@@ -23,20 +24,31 @@ function queryLimit(originalUrl) {
 }
 
 app.get('/', (req, res) => {
+  const source = getSource('claude');
+  const page = model => layout({
+    title: 'agent-ops', body: sessionsView(model), source: source.label, home: source.home(),
+  });
   const limit = queryLimit(req.originalUrl);
   if (limit === null) {
-    return res.status(400).type('html').send(layout({
-      title: 'agent-ops',
-      body: `<h1>Сесії</h1>${empty('Ліміт має бути цілим числом від 1 до 1000')}`,
-      source: 'Claude Code',
-      home: claudeHome(),
+    return res.status(400).type('html').send(page({ state: 'invalid-limit' }));
+  }
+  const result = source.listSessions();
+  if (result.state === 'unavailable') {
+    return res.status(503).type('html').send(page({
+      ...result, limit, visibleCount: null, availableCount: null, totalCount: null,
     }));
   }
-  res.type('html').send(layout({
-    title: 'agent-ops',
-    body: `<h1>agent-ops</h1>
-<p class="sub">Reading ${claudeHome()}</p>
-${empty('No slice is wired up yet.')}`,
+  const compareText = (left, right) => left < right ? -1 : left > right ? 1 : 0;
+  const sessions = result.sessions.toSorted((left, right) =>
+    right.mtimeMs - left.mtimeMs || compareText(left.projectKey, right.projectKey) || compareText(left.id, right.id)
+  ).slice(0, limit);
+  res.type('html').send(page({
+    ...result,
+    sessions,
+    limit,
+    visibleCount: sessions.length,
+    availableCount: result.sessions.length,
+    totalCount: result.state === 'complete' ? result.sessions.length : null,
   }));
 });
 

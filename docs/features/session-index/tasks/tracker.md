@@ -15,7 +15,7 @@
 | T3 | [Відхиляти помилковий limit перед обробкою індексу](validate-query-limit.md) | ports | maintainer | 3h | — | done | COMMIT |
 | T4 | [Показувати повні метадані та підсумки обмеженого переліку](render-session-table.md) | ui | maintainer | 4h | — | done | COMMIT |
 | T5 | [Розрізняти порожній, неповний і помилкові стани сторінки](render-session-states.md) | ui | maintainer | 3h | T4 | done | COMMIT |
-| T6 | [Підключити індекс на головній зі спільним сортуванням і лімітом](wire-session-index.md) | wiring | maintainer | 5h | T2, T3, T5 | todo | — |
+| T6 | [Підключити індекс на головній зі спільним сортуванням і лімітом](wire-session-index.md) | wiring | maintainer | 5h | T2, T3, T5 | done | COMMIT |
 | T7 | [Підтвердити приватність, недоторканність джерела й безпеку HTML](verify-index-privacy.md) | tests | maintainer | 4h | T6 | todo | — |
 | T8 | [Забезпечити читання повних значень у двох темах і на двох ширинах](verify-responsive-shell.md) | ui | maintainer | 3h | T6 | todo | — |
 
@@ -47,3 +47,5 @@ T1 завершено через RED → GREEN → REFACTOR → GATE. `npm run v
 **T4:** GOOD red: 5/5 тестів падали через відсутню sessionsView (undefined замість function). GREEN: таблиця показує всі чотири поля, UTC, початкову теку й похідний шлях; escaping, підсумки, ліміт і незмінність порядку перевірені. Перевикористано наявні компоненти канону без NEW-примітивів. `npm run verify`: exit 0, 31/31, 0 skipped.
 
 **T5:** GOOD red: 5/5 нових тестів падали; complete без рядків не мав повідомлення Сесій поки немає. GREEN: complete/partial/unavailable/invalid-limit розрізняються, partial зберігає рядки й окремі лічильники; невідома загальна кількість не підміняється нулем, сирі діагностики не показуються. `npm run verify`: exit 0, 36/36, 0 skipped.
+
+**T6:** GOOD red: 9/10 нових HTTP-тестів падали, перший — 0 рядків замість 6. GREEN: реєстр підключає читач, маршрут глобально сортує перед slice, зберігає health і повертає 200/400/503; ліміти 1/50/1000 перевірено на 1005 сесіях. Перший GATE: 45/46 через колізії імен лише за регістром на macOS; фікстуру виправлено без зміни очікуваного правила, повторний GATE 46/46. `npm run verify`: exit 0, 46/46, 0 skipped.
