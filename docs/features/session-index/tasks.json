@@ -101,7 +101,7 @@
         "test/session-view-states.test.js"
       ],
       "file": "docs/features/session-index/tasks/render-session-states.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T6",

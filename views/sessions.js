@@ -1,4 +1,4 @@
-import { esc } from './layout.js';
+import { esc, empty } from './layout.js';
 
 function limitControls({ limit, availableCount }) {
   const choices = new Set([1, 50, 100, 1000, limit]);
@@ -23,17 +23,29 @@ function sessionRow({ id, projectKey, projectPath, sizeBytes, mtimeMs }) {
 
 // The route has already selected the rows and computed the presentation totals.
 export function sessionsView(model) {
-  const { sessions, visibleCount, availableCount, limit } = model;
+  const { state, sessions, visibleCount, availableCount, limit, skippedProjects, skippedFiles } = model;
+  if (state === 'unavailable' || state === 'invalid-limit') {
+    const message = state === 'unavailable'
+      ? 'Не вдалося прочитати джерело сесій' : 'Ліміт має бути цілим числом від 1 до 1000';
+    return `<section class="session-index"><h1>Сесії</h1><p class="note">${esc(message)}</p></section>`;
+  }
+  const partial = state === 'partial';
+  const summary = partial
+    ? `Показано ${esc(visibleCount)} із ${esc(availableCount)} доступних сесій. Загальна кількість сесій джерела невідома.`
+    : `Показано ${esc(visibleCount)} із ${esc(availableCount)} сесій.`;
+  const warning = partial
+    ? `<p class="note">Увага: перелік неповний. Пропущено проєктів: ${esc(skippedProjects)}. Пропущено файлів: ${esc(skippedFiles)}.</p>` : '';
   const truncated = visibleCount < availableCount
     ? `<p class="sub">Ліміт: ${esc(limit)}. Показано лише найсвіжіші сесії; змініть кількість рядків, щоб побачити більше.</p>` : '';
   return `<section class="session-index">
 <h1>Сесії</h1>
-<p class="sub">Показано ${esc(visibleCount)} із ${esc(availableCount)} сесій.</p>
+<p class="sub">${summary}</p>
+${warning}
 ${truncated}
 ${limitControls(model)}
-<div class="table-wrap"><table>
+${sessions.length ? `<div class="table-wrap"><table>
 <thead><tr><th scope="col">ID сесії</th><th scope="col">Проєкт</th><th scope="col" class="num">Розмір, байти</th><th scope="col">Змінено (UTC)</th></tr></thead>
 <tbody>${sessions.map(sessionRow).join('')}</tbody>
-</table></div>
+</table></div>` : empty(partial ? 'Доступних сесій не знайдено; перелік неповний' : 'Сесій поки немає')}
 </section>`;
 }

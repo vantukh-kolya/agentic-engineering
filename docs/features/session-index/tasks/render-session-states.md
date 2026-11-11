@@ -9,8 +9,8 @@ files_hint: ["views/sessions.js", "test/session-view-states.test.js"]
 owner: "maintainer"
 estimate: "3h"
 context_budget: "M"  # 80 non-empty lines; усі потрібні витяги включено; до 4 додаткових файлів коду/правил на старті.
-status: "todo"
-step: ""
+status: "done"
+step: "COMMIT"
 ---
 
 # T5 — Розрізняти порожній, неповний і помилкові стани сторінки
@@ -156,11 +156,11 @@ Internal — no API surface.
 
 ## Checklist
 
-- [ ] У `test/session-view-states.test.js` спершу перевірити RED для complete без рядків, partial з рядками й без них, unavailable та invalid-limit.
-- [ ] У `views/sessions.js` використовувати empty() для «Сесій поки немає» тільки за complete без помилок; для partial без рядків — точне повідомлення AC-08.
-- [ ] У `views/sessions.js` перевикористати .note для попередження, окремо показати skippedProjects і skippedFiles, доступну кількість та невідому загальну; не дублювати проєкт як файл.
-- [ ] У `views/sessions.js` для unavailable й invalid-limit відображати точні повідомлення AC-09/AC-05 без таблиці й успішних нульових підсумків. Використати Shell/Empty state/Note/Page heading з канону та наявні status-токени.
-- [ ] У `test/session-view-states.test.js` перевірити нуль доступних за недоступності всіх проєктів, обидва ненульові лічильники та відсутність сирих винятків.
+- [x] У `test/session-view-states.test.js` спершу перевірити RED для complete без рядків, partial з рядками й без них, unavailable та invalid-limit.
+- [x] У `views/sessions.js` використовувати empty() для «Сесій поки немає» тільки за complete без помилок; для partial без рядків — точне повідомлення AC-08.
+- [x] У `views/sessions.js` перевикористати .note для попередження, окремо показати skippedProjects і skippedFiles, доступну кількість та невідому загальну; не дублювати проєкт як файл.
+- [x] У `views/sessions.js` для unavailable й invalid-limit відображати точні повідомлення AC-09/AC-05 без таблиці й успішних нульових підсумків. Використати Shell/Empty state/Note/Page heading з канону та наявні status-токени.
+- [x] У `test/session-view-states.test.js` перевірити нуль доступних за недоступності всіх проєктів, обидва ненульові лічильники та відсутність сирих винятків.
 
 ## Edge cases
 
@@ -175,7 +175,12 @@ Internal — no API surface.
 
 ## Definition of Done
 
-- [ ] Тести test/session-view-states.test.js перевіряють усі стани, точні повідомлення й підсумки AC-05–AC-10; npm run verify проходить.
-- [ ] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
-- [ ] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
-- [ ] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+- [x] Тести test/session-view-states.test.js перевіряють усі стани, точні повідомлення й підсумки AC-05–AC-10; npm run verify проходить.
+- [x] Кожне наведене обмеження збережене; код/коментарі/назви тестів англійською, node: imports, named exports, без класів і нових залежностей.
+- [x] Перед комітом виконано `npm run verify` (разом із preverify); фактичний результат записаний без підміни.
+- [x] Lint / vet: N/A — таких команд у репозиторії немає; нових інструментів не додавати.
+
+## Execution record — 2026-11-11
+
+- **TDD:** GOOD red: 5/5 нових тестів падали; complete без рядків не мав повідомлення Сесій поки немає. GREEN: complete/partial/unavailable/invalid-limit розрізняються, partial зберігає рядки й окремі лічильники; невідома загальна кількість не підміняється нулем, сирі діагностики не показуються.
+- **GATE:** `npm run verify` — exit 0, 36/36, 0 skipped; разом із `preverify`. Node `v26.13.0`, macOS; HTTP-тести запущено поза пісочницею. Окрема integration-команда не запускалась (`require_integration: never`); файлові й HTTP-тести входять у verify. Lint/vet — N/A, команд немає.

@@ -14,7 +14,7 @@
 | T2 | [Зберігати доступні рядки та розрізняти файлові збої](preserve-partial-results.md) | infra | maintainer | 5h | T1 | done | COMMIT |
 | T3 | [Відхиляти помилковий limit перед обробкою індексу](validate-query-limit.md) | ports | maintainer | 3h | — | done | COMMIT |
 | T4 | [Показувати повні метадані та підсумки обмеженого переліку](render-session-table.md) | ui | maintainer | 4h | — | done | COMMIT |
-| T5 | [Розрізняти порожній, неповний і помилкові стани сторінки](render-session-states.md) | ui | maintainer | 3h | T4 | todo | — |
+| T5 | [Розрізняти порожній, неповний і помилкові стани сторінки](render-session-states.md) | ui | maintainer | 3h | T4 | done | COMMIT |
 | T6 | [Підключити індекс на головній зі спільним сортуванням і лімітом](wire-session-index.md) | wiring | maintainer | 5h | T2, T3, T5 | todo | — |
 | T7 | [Підтвердити приватність, недоторканність джерела й безпеку HTML](verify-index-privacy.md) | tests | maintainer | 4h | T6 | todo | — |
 | T8 | [Забезпечити читання повних значень у двох темах і на двох ширинах](verify-responsive-shell.md) | ui | maintainer | 3h | T6 | todo | — |
@@ -45,3 +45,5 @@ T1 завершено через RED → GREEN → REFACTOR → GATE. `npm run v
 **T3:** GOOD red: порожній limit повертав 200 замість 400. GREEN: точна граматика, дублікати, межі 1/1000, початкові нулі й некоректні значення перевірені HTTP-тестами; ранню відмову до обходу остаточно перевіряє T6. `npm run verify`: exit 0, 26/26, 0 skipped.
 
 **T4:** GOOD red: 5/5 тестів падали через відсутню sessionsView (undefined замість function). GREEN: таблиця показує всі чотири поля, UTC, початкову теку й похідний шлях; escaping, підсумки, ліміт і незмінність порядку перевірені. Перевикористано наявні компоненти канону без NEW-примітивів. `npm run verify`: exit 0, 31/31, 0 skipped.
+
+**T5:** GOOD red: 5/5 нових тестів падали; complete без рядків не мав повідомлення Сесій поки немає. GREEN: complete/partial/unavailable/invalid-limit розрізняються, partial зберігає рядки й окремі лічильники; невідома загальна кількість не підміняється нулем, сирі діагностики не показуються. `npm run verify`: exit 0, 36/36, 0 skipped.
