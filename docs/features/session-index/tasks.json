@@ -22,7 +22,7 @@
         "test/session-metadata.test.js"
       ],
       "file": "docs/features/session-index/tasks/read-session-metadata.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T2",

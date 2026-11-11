@@ -10,7 +10,7 @@
 
 | # | Task | Layer | Owner | Estimate | Blocked by | Status | Step |
 |---|---|---|---|---|---|---|---|
-| T1 | [Збирати метадані основних сесій налаштованого джерела](read-session-metadata.md) | infra | maintainer | 5h | — | todo | — |
+| T1 | [Збирати метадані основних сесій налаштованого джерела](read-session-metadata.md) | infra | maintainer | 5h | — | done | COMMIT |
 | T2 | [Зберігати доступні рядки та розрізняти файлові збої](preserve-partial-results.md) | infra | maintainer | 5h | T1 | todo | — |
 | T3 | [Відхиляти помилковий limit перед обробкою індексу](validate-query-limit.md) | ports | maintainer | 3h | — | todo | — |
 | T4 | [Показувати повні метадані та підсумки обмеженого переліку](render-session-table.md) | ui | maintainer | 4h | — | todo | — |
@@ -33,3 +33,9 @@
 | T8 | M | 64 |
 
 Експорт у зовнішній issue tracker не виконувався; тіла задач готові для копіювання.
+
+## Execution — 2026-11-11
+
+T1 завершено через RED → GREEN → REFACTOR → GATE. `npm run verify`: exit 0, 12/12 (9 нових перевірок читача та 3 регресії оболонки), 0 skipped. Окремий integration-runner не запускався (`require_integration: never`); lint/vet — N/A. Деталі й фактичні обмеження — у [записі T1](read-session-metadata.md#execution-record--2026-11-11).
+
+Погоджена пауза після T1 за DEC-training-route; T2–T8 залишаються `todo`, не dropped і не blocked. Обробка збоїв читання залишається T2, реєстрація читача й HTTP-підключення — T6. Фіча загалом ще не готова до приймання.
