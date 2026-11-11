@@ -42,7 +42,7 @@
         "test/session-read-errors.test.js"
       ],
       "file": "docs/features/session-index/tasks/preserve-partial-results.md",
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "T3",
