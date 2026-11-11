@@ -225,6 +225,7 @@ main { flex: 1; padding-block: var(--s6) var(--s7); }
   padding-block: var(--s4);
 }
 .foot code { color: var(--text-soft); font-size: var(--size-xs); }
+.foot-inner > span { min-width: 0; overflow-wrap: anywhere; }
 
 /* ---- page header --------------------------------------------------------- */
 h1 { font-size: var(--size-xl); font-weight: 600; letter-spacing: -0.02em; margin: 0 0 var(--s1); }
@@ -433,6 +434,23 @@ td.when { white-space: nowrap; }
 .project-name { font-weight: 600; white-space: nowrap; }
 .project-path { color: var(--muted); font-size: var(--size-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 34ch; }
 .project-name + .project-path { margin-left: var(--s2); }
+
+/* Session metadata must be readable without relying on hover-only titles. */
+.session-index table { table-layout: fixed; }
+.session-index td { overflow-wrap: anywhere; }
+.session-index td.num { white-space: normal; }
+.session-index .project { display: block; }
+.session-index .id,
+.session-index .project-name,
+.session-index .project-path {
+  max-width: none;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+.session-index .project-name { font-family: var(--font-data); font-size: var(--size-sm); }
+.session-index .segmented { max-width: 100%; flex-wrap: wrap; }
 .title { font-weight: 500; }
 .untitled { color: var(--muted); font-style: italic; }
 
