@@ -175,7 +175,7 @@ test('invalid limits reject requests before invoking the registered reader', asy
   const source = getSource('claude');
   assert.equal(typeof source.listSessions, 'function');
   const spy = t.mock.method(source, 'listSessions', () => assert.fail('Reader invoked for invalid limit'));
-  for (const query of ['limit=', 'limit=0', 'limit=1&limit=1']) {
+  for (const query of ['limit=', 'limit=0', 'limit=1&limit=1', 'limit[]=1', 'limit%5Bx%5D=1']) {
     assert.equal((await server.get(`/?${query}`)).status, 400);
   }
   assert.equal(spy.mock.callCount(), 0);

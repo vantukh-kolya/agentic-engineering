@@ -16,7 +16,11 @@ app.get('/api/health', (req, res) => {
 });
 
 function queryLimit(originalUrl) {
-  const values = new URL(originalUrl, 'http://127.0.0.1').searchParams.getAll('limit');
+  const params = new URL(originalUrl, 'http://127.0.0.1').searchParams;
+  for (const key of params.keys()) {
+    if (key.startsWith('limit[')) return null;
+  }
+  const values = params.getAll('limit');
   if (!values.length) return 50;
   if (values.length !== 1 || !values[0] || /[^0-9]/.test(values[0])) return null;
   const limit = Number(values[0]);

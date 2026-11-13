@@ -11,7 +11,7 @@ test('missing and valid decimal limits are accepted, including leading zeros', a
   }
 });
 
-test('invalid limits return a helpful 400 page without a session list', async () => {
+test('invalid limits return a helpful 400 page without a session list', async t => {
   const queries = [
     'limit', 'limit=', 'limit=abc', 'limit=0', 'limit=1001', 'limit=-1',
     'limit=%2B1', 'limit=+1', 'limit=%201', 'limit=1%20', 'limit=1.0',
@@ -19,21 +19,22 @@ test('invalid limits return a helpful 400 page without a session list', async ()
     'limit=１', 'limit=1%0A', 'limit=1&limit=1', 'limit=&limit=1',
     'limit=1&limit=', 'limit[]=1', 'limit%5Bx%5D=1',
   ];
-  // Bracketed names are unrelated parameters; only exact "limit" is interpreted.
-  for (const query of queries.filter(query => !query.includes('[') && !query.includes('%5B'))) {
-    const response = await server.get(`/?${query}`);
-    const html = await response.text();
-    assert.equal(response.status, 400, query);
-    assert.match(response.headers.get('content-type'), /text\/html/);
-    assert.match(html, /Ліміт має бути цілим числом від 1 до 1000/);
-    assert.match(html, /Content-Security-Policy/);
-    assert.match(html, /data-theme-toggle/);
-    assert.doesNotMatch(html, /<table/);
+  for (const query of queries) {
+    await t.test(query, async () => {
+      const response = await server.get(`/?${query}`);
+      const html = await response.text();
+      assert.equal(response.status, 400, query);
+      assert.match(response.headers.get('content-type'), /text\/html/);
+      assert.match(html, /Ліміт має бути цілим числом від 1 до 1000/);
+      assert.match(html, /Content-Security-Policy/);
+      assert.match(html, /data-theme-toggle/);
+      assert.doesNotMatch(html, /<table/);
+    });
   }
 });
 
 test('unrelated query parameters do not impersonate or duplicate limit', async () => {
-  for (const query of ['limit[]=1', 'limit%5Bx%5D=1', 'other=1&limit=2', 'other=1&other=2']) {
+  for (const query of ['other=1&limit=2', 'other=1&other=2', 'other[]=1', 'other%5Bx%5D=1&limit=2']) {
     assert.equal((await server.get(`/?${query}`)).status, 200, query);
   }
 });
